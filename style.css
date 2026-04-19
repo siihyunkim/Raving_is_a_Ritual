@@ -135,8 +135,8 @@ html, body {
 #word1 { left: 20px; top: 50%; transform: translateY(-50%); }
 #word2 { left: 50%; top: 50%; transform: translate(-50%, -50%); }
 #word3 { right: 20px; top: 50%; transform: translateY(-50%); }
-#word4 { top: 20px; left: 50%; transform: translateX(-50%) rotate(90deg); }
-#word5 { bottom: 20px; left: 50%; transform: translateX(-50%) rotate(-90deg); }
+#word4 { top: 30px; left: 50%; transform: translateX(-50%) rotate(90deg); }
+#word5 { bottom: 30px; left: 50%; transform: translateX(-50%) rotate(-90deg); }
 
 
 /* ========================
@@ -477,5 +477,5 @@ html, body {
 #oWord1 { left: 20px; top: 50%; transform: translateY(-50%); }
 #oWord2 { left: 50%; top: 50%; transform: translate(-50%, -50%); }
 #oWord3 { right: 20px; top: 50%; transform: translateY(-50%); }
-#oWord4 { top: 20px; left: 50%; transform: translateX(-50%) rotate(90deg); }
-#oWord5 { bottom: 20px; left: 50%; transform: translateX(-50%) rotate(-90deg); }
+#oWord4 { top: 30px; left: 50%; transform: translateX(-50%) rotate(90deg); }
+#oWord5 { bottom: 30px; left: 50%; transform: translateX(-50%) rotate(-90deg); }
