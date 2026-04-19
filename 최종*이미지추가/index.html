@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raving is a Ritual</title>
+  <link rel="icon" href="contents/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://use.typekit.net/imy4kvn.css" />
+</head>
+<body>
+
+  <audio id="audio" src="contents/sound/main.mp3" autoplay loop></audio>
+  <audio id="outroSound" src="contents/sound/outro.mp3"></audio>
+
+  <!-- 1. entry -->
+  <div id="entry">
+    <img id="entryImage" src="contents/entry_main.jpg" />
+    <div id="entryText">
+      <button class="entryWord" id="word1">Raving</button>
+      <button class="entryWord" id="word2">is</button>
+      <button class="entryWord" id="word3">a Ritual</button>
+      <button class="entryWord" id="word4">Raving</button>
+      <button class="entryWord" id="word5">a Ritual</button>
+    </div>
+  </div>
+
+  <!-- 2. intro -->
+  <div id="intro" class="hidden">
+    <video id="introVideo" src="contents/loading.mp4" muted playsinline></video>
+    <div class="introWord" id="introText1"></div>
+    <div class="introWord" id="introText2"></div>
+    <div class="introWord" id="introText3"></div>
+    <div class="introWord" id="introText4"></div>
+    <div class="introWord" id="introText5"></div>
+  </div>
+
+  <!-- 3. experience -->
+  <div id="experience" class="hidden">
+    <div id="slideContainer">
+      <div class="slide" id="slide1"><img src="contents/backImg/1.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide2"><img src="contents/backImg/2.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide3"><img src="contents/backImg/3.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide4"><img src="contents/backImg/4.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide5"><img src="contents/backImg/5.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide6"><img src="contents/backImg/6.png" /><div class="slideOverlay"></div></div>
+      <div class="slide" id="slide7"><img src="contents/backImg/7.png" /><div class="slideOverlay"></div></div>
+    </div>
+  </div>
+
+  <!-- 인디케이터 -->
+  <div id="indicator" class="hidden">
+    <div id="indLeft"></div>
+    <div id="indRight"></div>
+    <div id="indTop"></div>
+    <div id="indBottom"></div>
+    <div class="exitWord" id="exit1">exit</div>
+    <div class="exitWord" id="exit2">exit</div>
+    <div class="exitWord" id="exit3">exit</div>
+    <div class="exitWord" id="exit4">exit</div>
+    <div class="exitWord" id="exit5">exit</div>
+  </div>
+
+   <!-- outro / 랜딩 -->
+<div id="outro">  <!-- hidden 제거 -->
+  <div id="outroText">
+    <span class="outroWord" id="oWord1">Raving</span>
+    <span class="outroWord" id="oWord2">is</span>
+    <span class="outroWord" id="oWord3">a Ritual</span>
+    <span class="outroWord" id="oWord4">Raving</span>
+    <span class="outroWord" id="oWord5">a Ritual</span>
+  </div>
+</div>
+
+  <!-- 커서 -->
+  <div id="cursor"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
