@@ -58,51 +58,48 @@ setInterval(() => {
    커서 변경 함수
 ======================== */
 function setExperienceCursor() {
-  cursor.style.cssText = `
-    left: ${cursor.style.left};
-    top: ${cursor.style.top};
-    background: url('contents/arrow.svg') center/contain no-repeat;
-    background-color: transparent;
-    border-radius: 0;
-    width: 32px;
-    height: 32px;
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%);
-  `;
+  cursor.style.width = "32px";
+  cursor.style.height = "32px";
+  cursor.style.borderRadius = "0";
+  cursor.style.backgroundImage = "url('contents/arrow.svg')";
+  cursor.style.backgroundSize = "contain";
+  cursor.style.backgroundRepeat = "no-repeat";
+  cursor.style.backgroundPosition = "center";
+  cursor.style.backgroundColor = "transparent";
 }
 
 function setEntryCursor() {
-  cursor.style.cssText = `
-    left: ${cursor.style.left};
-    top: ${cursor.style.top};
-    background: var(--cursor-entry);
-    border-radius: 50%;
-    width: 15px;
-    height: 15px;
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%);
-    transition: background-color 0.3s ease, transform 0.1s ease;
-  `;
+  cursor.style.width = "15px";
+  cursor.style.height = "15px";
+  cursor.style.borderRadius = "50%";
+  cursor.style.backgroundImage = "none";
+  cursor.style.backgroundColor = "#000000";
+  cursor.style.backgroundSize = "";
+  cursor.style.backgroundRepeat = "";
+  cursor.style.backgroundPosition = "";
 }
 
 function setHoverCursor(color) {
-  cursor.style.cssText = `
-    left: ${cursor.style.left};
-    top: ${cursor.style.top};
-    background: ${color};
-    border-radius: 50%;
-    width: 15px;
-    height: 15px;
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999;
-    transform: translate(-50%, -50%);
-    transition: background-color 0.3s ease, transform 0.1s ease;
-  `;
+  cursor.style.width = "15px";
+  cursor.style.height = "15px";
+  cursor.style.borderRadius = "50%";
+  cursor.style.backgroundImage = "none";
+  cursor.style.backgroundColor = color;
+  cursor.style.backgroundSize = "";
+  cursor.style.backgroundRepeat = "";
+  cursor.style.backgroundPosition = "";
+}
+
+/* ========================
+   오디오 초기화 함수
+======================== */
+function resetAudio() {
+  audioElement.currentTime = 0;
+  filter.frequency.value = 100;
+  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+  gainNode.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
+  audioElement.play();
 }
 
 
@@ -245,10 +242,7 @@ function resetInactivityTimer() {
         experience.classList.add("hidden");
         entry.classList.remove("hidden");
         resetSlides();
-
-        audioElement.currentTime = 0;
-        filter.frequency.value = 100;
-        gainNode.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
+        resetAudio(); /* 오디오 초기화 */
       }, 2500);
     }
   }, INACTIVITY_LIMIT);
@@ -430,9 +424,7 @@ function startOutro() {
       outro.classList.remove("fadeout");
       outro.classList.remove("active");
 
-      audioElement.currentTime = 0;
-      filter.frequency.value = 100;
-      gainNode.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
+      resetAudio(); /* 오디오 초기화 */
     }, 2000);
   }, 5000);
 }
@@ -471,12 +463,8 @@ function startOutro() {
     setTimeout(() => {
       experience.classList.add("hidden");
       entry.classList.remove("hidden");
-
       resetSlides();
-
-      audioElement.currentTime = 0;
-      filter.frequency.value = 100;
-      gainNode.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
+      resetAudio(); /* 오디오 초기화 */
     }, 2500);
   });
 });
