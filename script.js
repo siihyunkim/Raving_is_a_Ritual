@@ -61,7 +61,7 @@ function setExperienceCursor() {
   cursor.style.width = "32px";
   cursor.style.height = "32px";
   cursor.style.borderRadius = "0";
-  cursor.style.backgroundImage = "url('contents/arrow.svg')";
+  cursor.style.backgroundImage = "url('arrow.svg')";
   cursor.style.backgroundSize = "contain";
   cursor.style.backgroundRepeat = "no-repeat";
   cursor.style.backgroundPosition = "center";
