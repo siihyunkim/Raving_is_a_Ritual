@@ -73,20 +73,36 @@
     <div class="exitWord" id="exit5">exit</div>
   </div>
 
-   <!-- outro / 랜딩 -->
-<div id="outro">  <!-- hidden 제거 -->
-  <div id="outroText">
-    <span class="outroWord" id="oWord1">Raving</span>
-    <span class="outroWord" id="oWord2">is</span>
-    <span class="outroWord" id="oWord3">a Ritual</span>
-    <span class="outroWord" id="oWord4">Raving</span>
-    <span class="outroWord" id="oWord5">a Ritual</span>
+  <!-- outro / 랜딩 -->
+  <div id="outro">
+    <div id="outroText">
+      <span class="outroWord" id="oWord1">Raving</span>
+      <span class="outroWord" id="oWord2">is</span>
+      <span class="outroWord" id="oWord3">a Ritual</span>
+      <span class="outroWord" id="oWord4">Raving</span>
+      <span class="outroWord" id="oWord5">a Ritual</span>
+    </div>
   </div>
-</div>
 
   <!-- 커서 -->
   <div id="cursor"></div>
 
   <script src="script.js"></script>
+
+  <!-- 오디오 끊김 방지 -->
+  <script>
+    const audioEl = document.getElementById("audio");
+    audioEl.addEventListener("ended", () => {
+      audioEl.currentTime = 0;
+      audioEl.play();
+    });
+    setInterval(() => {
+      const ctx = window._audioCtx;
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume();
+      }
+    }, 1000);
+  </script>
+
 </body>
 </html>
