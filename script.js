@@ -20,7 +20,7 @@ let started = false;
 ======================== */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
-window._audioCtx = audioCtx; /* 끊김 방지용 */
+window._audioCtx = audioCtx;
 
 const filter = audioCtx.createBiquadFilter();
 filter.type = "lowpass";
@@ -55,6 +55,26 @@ setInterval(() => {
 
 
 /* ========================
+   커서 변경 함수
+======================== */
+function setExperienceCursor() {
+  cursor.style.background = "url('contents/arrow.svg') center/contain no-repeat";
+  cursor.style.backgroundColor = "transparent";
+  cursor.style.borderRadius = "0";
+  cursor.style.width = "32px";
+  cursor.style.height = "32px";
+}
+
+function setEntryCursor() {
+  cursor.style.background = "var(--cursor-entry)";
+  cursor.style.backgroundColor = "";
+  cursor.style.borderRadius = "50%";
+  cursor.style.width = "15px";
+  cursor.style.height = "15px";
+}
+
+
+/* ========================
    랜딩 시퀀스 (최초 진입)
 ======================== */
 function startLanding() {
@@ -73,7 +93,7 @@ function startLanding() {
   setTimeout(() => {
     outroText.classList.remove("visible");
     entry.classList.remove("hidden");
-    cursor.style.background = "var(--cursor-entry)";
+    setEntryCursor();
 
     outro.classList.add("fadeout");
 
@@ -110,7 +130,7 @@ window.addEventListener("mousemove", (e) => {
 
 
 /* ========================
-   entryWord 호버 + 클릭 → intro 전환
+   entryWord 호버
 ======================== */
 const introStr = "entering";
 
@@ -121,25 +141,34 @@ document.querySelectorAll(".entryWord").forEach((word) => {
   });
   word.addEventListener("mouseleave", () => {
     document.querySelectorAll(".entryWord").forEach(w => w.classList.remove("hovered"));
-    cursor.style.background = "var(--cursor-entry)";
+    setEntryCursor();
   });
-  word.addEventListener("click", () => {
-    audioCtx.resume();
-    entry.classList.add("hidden");
-    intro.classList.remove("hidden");
-    introVideo.currentTime = 0;
-    introVideo.play();
+});
 
-    document.querySelectorAll(".introWord").forEach((el) => {
-      el.textContent = "";
-      let i = 0;
-      const typing = setInterval(() => {
-        el.textContent += introStr[i];
-        i++;
-        if (i >= introStr.length) clearInterval(typing);
-      }, 120);
-    });
+
+/* ========================
+   entry 전체 클릭 → intro 전환
+======================== */
+function goToIntro() {
+  audioCtx.resume();
+  entry.classList.add("hidden");
+  intro.classList.remove("hidden");
+  introVideo.currentTime = 0;
+  introVideo.play();
+
+  document.querySelectorAll(".introWord").forEach((el) => {
+    el.textContent = "";
+    let i = 0;
+    const typing = setInterval(() => {
+      el.textContent += introStr[i];
+      i++;
+      if (i >= introStr.length) clearInterval(typing);
+    }, 120);
   });
+}
+
+entry.addEventListener("click", () => {
+  goToIntro();
 });
 
 
@@ -152,14 +181,12 @@ introVideo.addEventListener("ended", () => {
   indicator.classList.remove("hidden");
   started = true;
   startSlides();
-  cursor.style.background = "#802323";
+  setExperienceCursor();
 
   filter.frequency.setTargetAtTime(20000, audioCtx.currentTime, 0.5);
   gainNode.gain.setTargetAtTime(1, audioCtx.currentTime, 0.5);
 
   setTimeout(() => experience.classList.add("active"), 50);
-
-  /* 비활성 타이머 시작 */
   resetInactivityTimer();
 });
 
@@ -177,7 +204,7 @@ function resetInactivityTimer() {
     if (started) {
       experience.classList.remove("active");
       indicator.classList.add("hidden");
-      cursor.style.background = "var(--cursor-entry)";
+      setEntryCursor();
       started = false;
 
       gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
@@ -195,13 +222,11 @@ function resetInactivityTimer() {
   }, INACTIVITY_LIMIT);
 }
 
-/* 스크롤 시 타이머 리셋 */
 window.addEventListener("wheel", (e) => {
   if (!started) return;
   resetInactivityTimer();
 });
 
-/* 마우스 이동 시 타이머 리셋 */
 window.addEventListener("mousemove", () => {
   if (!started) return;
   resetInactivityTimer();
@@ -218,7 +243,7 @@ let scrollProgress = 0;
 let targetProgress = 0;
 
 function resetSlides() {
-  clearTimeout(inactivityTimer); /* 타이머 정리 */
+  clearTimeout(inactivityTimer);
   slides.forEach(s => {
     s.classList.remove("active");
     s.classList.remove("current");
@@ -364,7 +389,7 @@ function startOutro() {
     experience.classList.add("hidden");
     resetSlides();
     entry.classList.remove("hidden");
-    cursor.style.background = "var(--cursor-entry)";
+    setEntryCursor();
 
     outro.classList.add("fadeout");
 
@@ -393,6 +418,9 @@ function startOutro() {
       document.getElementById(i).style.opacity = "0";
     });
     cursor.style.background = "#935c66";
+    cursor.style.borderRadius = "50%";
+    cursor.style.width = "15px";
+    cursor.style.height = "15px";
   });
 
   el.addEventListener("mouseleave", () => {
@@ -400,13 +428,13 @@ function startOutro() {
     ["indLeft", "indRight", "indTop", "indBottom"].forEach(i => {
       document.getElementById(i).style.opacity = "1";
     });
-    cursor.style.background = "#802323";
+    setExperienceCursor();
   });
 
   el.addEventListener("click", () => {
     experience.classList.remove("active");
     indicator.classList.add("hidden");
-    cursor.style.background = "var(--cursor-entry)";
+    setEntryCursor();
     started = false;
 
     gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
@@ -436,7 +464,7 @@ window.addEventListener("keydown", (e) => {
     indicator.classList.remove("hidden");
     started = true;
     startSlides();
-    cursor.style.background = "#802323";
+    setExperienceCursor();
     audioCtx.resume();
     filter.frequency.setTargetAtTime(20000, audioCtx.currentTime, 1.5);
     gainNode.gain.setTargetAtTime(1, audioCtx.currentTime, 1.5);
