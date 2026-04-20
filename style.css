@@ -423,11 +423,14 @@ html, body {
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
 }
 
 #experience.active ~ #cursor {
-  background: #910e21;
+  background: url('contents/arrow.svg') center/contain no-repeat !important;
+  border-radius: 0;
+  width: 25px;
+  height: 25px;
 }
 
 /* ========================
