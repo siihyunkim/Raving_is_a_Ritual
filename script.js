@@ -20,6 +20,7 @@ let started = false;
 ======================== */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
+window._audioCtx = audioCtx; /* 끊김 방지용 */
 
 const filter = audioCtx.createBiquadFilter();
 filter.type = "lowpass";
@@ -40,6 +41,18 @@ audioElement.addEventListener("play", () => {
   });
 });
 
+/* 오디오 끊김 방지 */
+audioElement.addEventListener("ended", () => {
+  audioElement.currentTime = 0;
+  audioElement.play();
+});
+
+setInterval(() => {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}, 1000);
+
 
 /* ========================
    랜딩 시퀀스 (최초 진입)
@@ -53,12 +66,10 @@ function startLanding() {
   outroSound.currentTime = 0;
   outroSound.play();
 
-  /* 1초 뒤 텍스트 나타남 */
   setTimeout(() => {
     outroText.classList.add("visible");
   }, 1000);
 
-  /* 4초 뒤 entry로 전환 */
   setTimeout(() => {
     outroText.classList.remove("visible");
     entry.classList.remove("hidden");
@@ -147,6 +158,53 @@ introVideo.addEventListener("ended", () => {
   gainNode.gain.setTargetAtTime(1, audioCtx.currentTime, 0.5);
 
   setTimeout(() => experience.classList.add("active"), 50);
+
+  /* 비활성 타이머 시작 */
+  resetInactivityTimer();
+});
+
+
+/* ========================
+   비활성 타이머 - 일정 시간 인터랙션 없으면 entry로 복귀
+======================== */
+let inactivityTimer = null;
+const INACTIVITY_LIMIT = 60000; /* 60초 - 조절 가능 */
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  if (!started) return;
+  inactivityTimer = setTimeout(() => {
+    if (started) {
+      experience.classList.remove("active");
+      indicator.classList.add("hidden");
+      cursor.style.background = "var(--cursor-entry)";
+      started = false;
+
+      gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
+
+      setTimeout(() => {
+        experience.classList.add("hidden");
+        entry.classList.remove("hidden");
+        resetSlides();
+
+        audioElement.currentTime = 0;
+        filter.frequency.value = 100;
+        gainNode.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
+      }, 2500);
+    }
+  }, INACTIVITY_LIMIT);
+}
+
+/* 스크롤 시 타이머 리셋 */
+window.addEventListener("wheel", (e) => {
+  if (!started) return;
+  resetInactivityTimer();
+});
+
+/* 마우스 이동 시 타이머 리셋 */
+window.addEventListener("mousemove", () => {
+  if (!started) return;
+  resetInactivityTimer();
 });
 
 
@@ -160,6 +218,7 @@ let scrollProgress = 0;
 let targetProgress = 0;
 
 function resetSlides() {
+  clearTimeout(inactivityTimer); /* 타이머 정리 */
   slides.forEach(s => {
     s.classList.remove("active");
     s.classList.remove("current");
@@ -272,38 +331,32 @@ updateSlide();
 ======================== */
 function startOutro() {
   started = false;
+  clearTimeout(inactivityTimer);
   const outroSound = document.getElementById("outroSound");
 
-  /* 선 완전히 만나게 + 사운드 fade out */
   document.getElementById("indLeft").style.width = "50%";
   document.getElementById("indRight").style.width = "50%";
   document.getElementById("indTop").style.height = "50%";
   document.getElementById("indBottom").style.height = "50%";
   gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.8);
 
-  /* 이미지만 사라짐 - outro는 아직 안 띄움 */
   experience.classList.remove("active");
 
-
-/* 2초 뒤 (십자선 충분히 보인 후) outro + 빨간색 */
-setTimeout(() => {
-  outro.classList.remove("hidden");
-
-  requestAnimationFrame(() => {
+  setTimeout(() => {
+    outro.classList.remove("hidden");
     requestAnimationFrame(() => {
-      outro.classList.add("active");
+      requestAnimationFrame(() => {
+        outro.classList.add("active");
+      });
     });
-  });
-}, 2000);
+  }, 2000);
 
-  /* 3초 뒤 텍스트 + 사운드 */
   setTimeout(() => {
     outroText.classList.add("visible");
     outroSound.currentTime = 0;
     outroSound.play();
   }, 3000);
 
-  /* 5초 뒤 entry 준비 */
   setTimeout(() => {
     outroText.classList.remove("visible");
     indicator.classList.add("hidden");
@@ -388,5 +441,6 @@ window.addEventListener("keydown", (e) => {
     filter.frequency.setTargetAtTime(20000, audioCtx.currentTime, 1.5);
     gainNode.gain.setTargetAtTime(1, audioCtx.currentTime, 1.5);
     setTimeout(() => experience.classList.add("active"), 50);
+    resetInactivityTimer();
   }
 });
