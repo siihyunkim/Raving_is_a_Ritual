@@ -58,19 +58,51 @@ setInterval(() => {
    커서 변경 함수
 ======================== */
 function setExperienceCursor() {
-  cursor.style.background = "url('contents/arrow.svg') center/contain no-repeat";
-  cursor.style.backgroundColor = "transparent";
-  cursor.style.borderRadius = "0";
-  cursor.style.width = "32px";
-  cursor.style.height = "32px";
+  cursor.style.cssText = `
+    left: ${cursor.style.left};
+    top: ${cursor.style.top};
+    background: url('contents/arrow.svg') center/contain no-repeat;
+    background-color: transparent;
+    border-radius: 0;
+    width: 32px;
+    height: 32px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+  `;
 }
 
 function setEntryCursor() {
-  cursor.style.background = "var(--cursor-entry)";
-  cursor.style.backgroundColor = "";
-  cursor.style.borderRadius = "50%";
-  cursor.style.width = "15px";
-  cursor.style.height = "15px";
+  cursor.style.cssText = `
+    left: ${cursor.style.left};
+    top: ${cursor.style.top};
+    background: var(--cursor-entry);
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  `;
+}
+
+function setHoverCursor(color) {
+  cursor.style.cssText = `
+    left: ${cursor.style.left};
+    top: ${cursor.style.top};
+    background: ${color};
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  `;
 }
 
 
@@ -137,7 +169,7 @@ const introStr = "entering";
 document.querySelectorAll(".entryWord").forEach((word) => {
   word.addEventListener("mouseenter", () => {
     document.querySelectorAll(".entryWord").forEach(w => w.classList.add("hovered"));
-    cursor.style.background = "#935c66";
+    setHoverCursor("#935c66");
   });
   word.addEventListener("mouseleave", () => {
     document.querySelectorAll(".entryWord").forEach(w => w.classList.remove("hovered"));
@@ -192,7 +224,7 @@ introVideo.addEventListener("ended", () => {
 
 
 /* ========================
-   비활성 타이머 - 일정 시간 인터랙션 없으면 entry로 복귀
+   비활성 타이머
 ======================== */
 let inactivityTimer = null;
 const INACTIVITY_LIMIT = 60000; /* 60초 - 조절 가능 */
@@ -417,10 +449,7 @@ function startOutro() {
     ["indLeft", "indRight", "indTop", "indBottom"].forEach(i => {
       document.getElementById(i).style.opacity = "0";
     });
-    cursor.style.background = "#935c66";
-    cursor.style.borderRadius = "50%";
-    cursor.style.width = "15px";
-    cursor.style.height = "15px";
+    setHoverCursor("#935c66");
   });
 
   el.addEventListener("mouseleave", () => {
