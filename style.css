@@ -426,13 +426,6 @@ html, body {
   transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
 }
 
-#experience.active ~ #cursor {
-  background: url('contents/arrow.svg') center/contain no-repeat !important;
-  border-radius: 0;
-  width: 25px;
-  height: 25px;
-}
-
 /* ========================
    outro 페이지
 ======================== */
